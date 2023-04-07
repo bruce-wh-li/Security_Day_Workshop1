@@ -1,2 +1,2 @@
-# Security_Day_Lab
+# Security_Day_Workshop # 1
 Security Day - Workshop # 1
