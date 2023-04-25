@@ -1,0 +1,74 @@
+====================
+/Intro to test box /
+====================
+uname -a
+minikube version
+minikube status
+minikube start 
+
+docker version
+docker ps
+docker container list
+docker image list
+ 
+github - wordsmith, juiceshop, platform registry
+
+========================
+/ Test Box Walkthrough /
+========================
+minikube start
+minikube tunnel
+minikube service --all
+
+docker run --rm -p 3000:3000 bkimminich/juice-shop
+docker ps 
+
+===================
+\ DAST/SAST setup \
+===================
+
+juice-shop first 
+setting -> issue
+repo -> setting -> secrets -> action
+rocket chat token
+ admin- workspace -> administration
+.github/workflows
+
+trivy
+
+market place trivy
+verify by github
+
+==================
+\ github action  \
+===================
+
+test.yaml
+sonar cloud scanner
+
+=========================
+/security finding report/ 
+=========================
+security tab
+zap report - itsecgame
+sonar cloud 
+rocket chat message
+
+=================
+/manual zap scan/
+=================
+cd wordsmith
+docker compose up --build
+
+docker run --rm -p 3000:3000 bkimminich/juice-shop
+docker container list
+
+#docker inspect <container id> :
+
+cd ~/juice-shop
+docker run -v $(pwd):/zap/wrk/:rw -t owasp/zap2docker-stable zap-baseline.py     -t http://$(ip -f inet -o addr show docker0 | awk '{print $4}' | cut -d '/' -f 1):3000 -g gen.conf -r juice-shop_zap.html
+
+cd ~/wordsmith
+docker run -v $(pwd):/zap/wrk/:rw -t owasp/zap2docker-stable zap-baseline.py     -t http://$(ip -f inet -o addr show docker0 | awk '{print $4}' | cut -d '/' -f 1):8080 -g gen.conf -r wordsmith_zap.html
+
+
