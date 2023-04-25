@@ -1,0 +1,230 @@
++===========+
+|docker     |
++===========+
+docker version
+
+docker pull donaldrich/kali-linux
+docker run -t -i kalilinux/kali-linux-docker
+docker image list
+
+docker container list --all
+docker start
+docker attach 
+
+docker ps 
+docker push 
+docker commit 
+
+========
+/ Kali /
+========
+
+https://www.kali.org/docs/general-use/metapackages/
+
+---- scanning an app running in another docker container  ----
+https://www.proxy.org/docs/docker/about/#scanning-an-app-running-in-another-docker-container
+docker network create net
+
+-- scanning an app running on the host OS --
+echo $(ip -f inet -o addr show docker0 | awk '{print $4}' | cut -d '/' -f 1)
+
+docker inspect <container id>
+
+
+docker run -t owasp/zap2docker-weekly zap-baseline.py -t http://$(ip -f inet -o addr show docker0 | awk '{print $4}' | cut -d '/' -f 1):3000
+
++=================================+
+| owasp zap  scan -webswing       |
++==================================+
+
+docker run -u zap -p 8080:8080 -p 8090:8090 -i owasp/zap2docker-stable zap-webswing.sh
+https://www.zaproxy.org/docs/docker/webswing/
+
++=============+
+| minikube :  |
++=============+
+https://minikube.sigs.k8s.io/docs/start/
+
+https://www.fosstechnix.com/how-to-install-minikube-on-ubuntu-22-04-lts/
+
+## minikube start here
+
+minikube version
+minikube status 
+minikube dashboard
+
+## 
+minikube start --network-plugin=cni --cni=calico
+
+## 
+minikube status 
+
+#To check minikube internal IP
+minikube ip 
+
+#To stop minikube cluster
+minikube stop
+
++==================+
+| kubectl commands |
++==================+
+
+## k8s cluster 
+kubectl cluster-info
+
+## k8s node info
+kubectl get nodes
+
+## get cluster events 
+kubectl get events
+
+## kubectl config view
+kubectl config view 
+
+## Create container on minikube cluster using kubectl (no need if run already)
+# kubectl run hello-minikube --image=gcr.io/google_containers/echoserver:1.4 --port=8080
+
+## get k8s pods
+kubectl get pods
+
+## deploy (no need if deploy aleady)
+
+kubectl create deployment hello-node --image=k8s.gcr.io/echoserver:1.4
+
+## get deployment info
+kubectl get deployment
+
+# check service on minikube cluster
+
+kubectl get svc
+
+#To delete service on minikube cluster using kubectl
+kubectl delete service hello-node
+
+#To delete deployment on minikube cluster using kubectl
+kubectl delete deployment hello-node
+
++===============+
+| ubuntu linux  |
++===============+
+# ip - show / manipulate routing, network devices, interfaces and tunnels
+
+ip a 
+
++================+
+| docker samples |
++================+
+#source: https://github.com/oykotbruce/wordsmith
+
+#Installation: 
+
+git clone https://github.com/oykotbruce/wordsmith
+cd wordsmith 
+kubectl apply -k . 
+
+#Launch 
+minikube start 
+minikube tunnel
+minikube service --all
+
+kubectl get svc 
+kubectl get services <web>
+
++=================+
+| OWASP Juiceshop |
++=================+
+https://owasp.org/www-project-juice-shop/
+https://github.com/juice-shop/juice-shop/blob/master/docker-compose.test.yml
+docker pull bkimminich/juice-shop
+docker run --rm -p 3000:3000 bkimminich/juice-shop
+
++===========================+
+| run sonar scanner mannual |
++===========================+
+
+Download and unzip the SonarScanner for Linux
+
+And add the bin directory to the PATH environment variable
+
+Download :https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.7.0.2747-linux.zip
+
+Configure the SONAR_TOKEN environment variable
+
+    Name of the environment variable:
+
+    SONAR_TOKEN
+
+===
+
+sonar-scanner \
+  -Dsonar.organization=bli-sonar-org \
+  -Dsonar.projectKey=security_day \
+  -Dsonar.sources=. \
+  -Dsonar.host.url=https://sonarcloud.io
+
+
++===================+
+| sonar cloud proj  |
++===================+
+
+In your GitHub repository, go to Settings > Secrets > Actions and create a new secret with the following details:
+
+    In the Name field, enter
+
+    SONAR_TOKEN
+
+In the Value field, enter 
+
+Create or update your
+
+.github/workflows/build.yml
+
+Here is a base configuration to run a SonarCloud analysis on your master branch and Pull Requests. If you already have some GitHub Actions, you might want to just add some of these new steps to an existing one.
+
+name: Build
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    types: [opened, synchronize, reopened]
+jobs:
+  sonarcloud:
+    name: SonarCloud
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+Create a
+
+sonar-project.properties
+
+file
+Create a configuration file in the root directory of the project and name it
+
+sonar-project.properties
+
+sonar.projectKey=security_day
+sonar.organization=bli-sonar-org
+
+# This is the name and version displayed in the SonarCloud UI.
+#sonar.projectName=Security Day Workshop 2023
+#sonar.projectVersion=1.0
+
+# Path is relative to the sonar-project.properties file. Replace "\" by "/" on Windows.
+#sonar.sources=.
+
+# Encoding of the source code. Default is default system encoding
+#sonar.sourceEncoding=UTF-8
+
+
+
+
+
