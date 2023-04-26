@@ -66,9 +66,9 @@ docker container list
 #docker inspect <container id> :
 
 cd ~/juice-shop
-docker run -v $(pwd):/zap/wrk/:rw -t owasp/zap2docker-stable zap-baseline.py     -t http://$(ip -f inet -o addr show docker0 | awk '{print $4}' | cut -d '/' -f 1):3000 -g gen.conf -r juice-shop_zap.html
+docker run --rm -v $(pwd):/zap/wrk/:rw -t owasp/zap2docker-stable zap-baseline.py     -t http://$(ip -f inet -o addr show docker0 | awk '{print $4}' | cut -d '/' -f 1):3000 -g gen.conf -r juice-shop_zap.html
 
 cd ~/wordsmith
-docker run -v $(pwd):/zap/wrk/:rw -t owasp/zap2docker-stable zap-baseline.py     -t http://$(ip -f inet -o addr show docker0 | awk '{print $4}' | cut -d '/' -f 1):8080 -g gen.conf -r wordsmith_zap.html
+docker run --rm -v $(pwd):/zap/wrk/:rw -t owasp/zap2docker-stable zap-baseline.py     -t http://$(ip -f inet -o addr show docker0 | awk '{print $4}' | cut -d '/' -f 1):8080 -g gen.conf -r wordsmith_zap.html
 
 
