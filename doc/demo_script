@@ -71,4 +71,4 @@ docker run --rm -v $(pwd):/zap/wrk/:rw -t owasp/zap2docker-stable zap-baseline.p
 cd ~/wordsmith
 docker run --rm -v $(pwd):/zap/wrk/:rw -t owasp/zap2docker-stable zap-baseline.py     -t http://$(ip -f inet -o addr show docker0 | awk '{print $4}' | cut -d '/' -f 1):8080 -g gen.conf -r wordsmith_zap.html
 
-
+docker container prune -f
